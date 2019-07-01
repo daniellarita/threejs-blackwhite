@@ -98,10 +98,10 @@ var render = function () {
   addZRotation(line3,0.02);
   addZRotation(line4,0.02,true);
 
-  addXRotation(circle, 0.5)
-  addXRotation(circle2, 0.5)
-  addXRotation(circle3, 0.2)
-  addXRotation(circle4, 0.2)
+  addXRotation(circle, 0.02)
+  addXRotation(circle2, 0.02)
+  addXRotation(circle3, 0.02)
+  addXRotation(circle4, 0.02)
 
   renderer.render(scene, camera);
 };
