@@ -25,62 +25,36 @@ document.body.appendChild( renderer.domElement );
 // ART
 // ------------------------------------------------
 
-geometry = new THREE.Geometry();
-geometry.vertices.push(new THREE.Vector3(0, 0, 0)); //x, y, z
-geometry.vertices.push(new THREE.Vector3(450, -800, 0));
 
-geometry2 = new THREE.Geometry();
-geometry2.vertices.push(new THREE.Vector3(0, 0, 0)); //x, y, z
-geometry2.vertices.push(new THREE.Vector3(-450, -800, 0));
+// CIRCLESSSSS
 
-geometry3 = new THREE.Geometry();
-geometry3.vertices.push(new THREE.Vector3(0, 0, 0)); //x, y, z
-geometry3.vertices.push(new THREE.Vector3(-450, 800, 0));
-
-geometry4 = new THREE.Geometry();
-geometry4.vertices.push(new THREE.Vector3(0, 0, 0)); //x, y, z
-geometry4.vertices.push(new THREE.Vector3(450, 800, 0));
-
-material = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 5 } );
-
-line = new THREE.Line(geometry, material);
-line2 = new THREE.Line(geometry2, material);
-line3 = new THREE.Line(geometry3, material);
-line4 = new THREE.Line(geometry4, material);
-
-scene.add(line);
-scene.add(line2);
-scene.add(line3);
-scene.add(line4);
-
-var circleGeometry = new THREE.CircleGeometry( .1, 85 );
 var circleMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.5} );
-var circle = new THREE.Mesh( circleGeometry, circleMaterial );
 
-var circleGeometry2 = new THREE.CircleGeometry( .3, 85 );
-var circleMaterial2 = new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.5} );
-var circle2 = new THREE.Mesh( circleGeometry2, circleMaterial2 );
+const makeCircle = (radius,segments) => {
+  circleGeometry = new THREE.CircleGeometry(radius,segments);
+  circle = new THREE.Mesh( circleGeometry, circleMaterial );
+  return circle;
+ }
 
-var circleGeometry3 = new THREE.CircleGeometry( .7, 85 );
-var circleMaterial3 = new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.5} );
-var circle3 = new THREE.Mesh( circleGeometry3, circleMaterial3 );
-
-var circleGeometry4 = new THREE.CircleGeometry( .5, 85 );
-var circleMaterial4 = new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.5} );
-var circle4 = new THREE.Mesh( circleGeometry4, circleMaterial4 );
-
-scene.add(circle);
-scene.add(circle2);
-scene.add(circle3);
-scene.add(circle4);
-
-var addZRotation = function (shape, n, neg) {
-  if (neg === true){
-    shape.rotation.z -= n;
-  } else {
-    shape.rotation.z += n;
+const makeCircles = (n, startRadius, segments, radiusIncrement) => {
+  let arr = [];
+  for (let i=0;i<n;i++){
+    c = makeCircle(startRadius,segments);
+    startRadius += radiusIncrement;
+    arr.push(c);
   }
-};
+  return arr;
+}
+
+const circlesArray = makeCircles(10, .1, 50, .2);
+
+const addCirclesToScene = (circlesArray) => {
+  for (let i=0;i<circlesArray.length;i++){
+    scene.add(circlesArray[i]);
+  }
+}
+
+addCirclesToScene(circlesArray);
 
 var addXRotation = function (shape, n, neg) {
   if (neg === true){
@@ -90,18 +64,16 @@ var addXRotation = function (shape, n, neg) {
   }
 };
 
+const addXRotationMultiple = (arr, n) => {
+  for (let i=0;i<arr.length;i++){
+    addXRotation(arr[i], n);
+  }
+}
+
 var render = function () {
   requestAnimationFrame( render );
 
-  addZRotation(line,0.02);
-  addZRotation(line2,0.02,true);
-  addZRotation(line3,0.02);
-  addZRotation(line4,0.02,true);
-
-  addXRotation(circle, 0.02)
-  addXRotation(circle2, 0.02)
-  addXRotation(circle3, 0.02)
-  addXRotation(circle4, 0.02)
+  addXRotationMultiple(circlesArray, .001);
 
   renderer.render(scene, camera);
 };
